@@ -10,7 +10,7 @@ public:
     Date(int day, int month, int year) : day(day), month(month), year(year) {}
     Date operator++()
     {
-        day++;        
+        day++;
         if (day > 31)
         {
             day = 1;
@@ -44,7 +44,10 @@ public:
 
 int main()
 {
-    Date some = Date(31, 12, 2021);
+    string temp;
+    printf("Enter a data dd-mm-yyyy: ");
+    cin >> temp;
+    Date some = Date(stoi(temp.substr(0, 2)), stoi(temp.substr(3, 2)), stoi(temp.substr(6)));
     printf("Initial Date: ");
     some.print();
     ++some;
