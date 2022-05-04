@@ -1,4 +1,4 @@
-# Exp 6 abstract class & exception hadnling
+# Exp 6 Abstract classes & Exception handling
 
 
 - create an abstract class bank with virutal function getbalance & withdrawal
