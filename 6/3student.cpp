@@ -23,7 +23,7 @@ public:
             cin >> marks;
             if (marks < 0 || marks > 100)
             {
-                throw 0;
+                throw '0';
             }
         }
         catch (int x)
