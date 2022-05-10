@@ -5,6 +5,7 @@ using namespace std;
 class Vehicle
 {
 public:
+    string name;
     int hour, peakHourFee;
     double distance, amount;
     double getEstimate()
@@ -21,8 +22,9 @@ public:
 class Ola : public Vehicle
 {
 public:
-    Ola(double dist, int h)
+    Ola(double dist, int h, string pName)
     {
+        name = pName;
         distance = dist;
         hour = h;
         peakHourFee = 20;
@@ -31,8 +33,9 @@ public:
 class Uber : public Vehicle
 {
 public:
-    Uber(double dist, int h)
+    Uber(double dist, int h, string pName)
     {
+        name = pName;
         distance = dist;
         hour = h;
         peakHourFee = 15;
@@ -54,11 +57,14 @@ void compare(Ola ola, Uber uber)
 int main()
 {
     int hr, distance;
+    string pName;
+    cout << "Enter your name: ";
+    cin >> pName;
     cout << "Enter dist: ";
     cin >> distance;
     cout << "Enter hour: ";
     cin >> hr;
-    Ola a(distance, hr);
-    Uber b(distance, hr);
+    Ola a(distance, hr, pName);
+    Uber b(distance, hr, pName);
     compare(a, b);
 }
