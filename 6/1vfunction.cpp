@@ -8,6 +8,12 @@ protected:
     int balance;
     virtual int getBalance() = 0;
     virtual void deposit(int amt) = 0;
+    void withdrawal()
+    {
+        int amt;
+        cin >> amt;
+        balance -= amt;
+    }
 
 public:
     Bank()
