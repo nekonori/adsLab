@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+template <typename T>
 class Node
 {
 public:
-	int val;
-	Node *left, *right;
-	Node(int val)
+	T val;
+	Node<T> *left, *right;
+	Node(T val)
 	{
 		this->val = val;
 		left = nullptr;
@@ -14,73 +15,103 @@ public:
 	}
 };
 
-Node *rightRotate(Node *x)
+template <class T>
+Node<T> *rightRotate(Node<T> *x)
 {
-	Node *y = x->left;
+	Node<T> *y = x->left;
 	x->left = y->right;
 	y->right = x;
 	return y;
 }
 
-Node *leftRotate(Node *x)
+template <class T>
+Node<T> *leftRotate(Node<T> *x)
 {
-	Node *y = x->right;
+	Node<T> *y = x->right;
 	x->right = y->left;
 	y->left = x;
 	return y;
 }
 
-Node *splay(Node *root, int val)
+template <class T>
+Node<T> *splay(Node<T> *root, T key)
 {
-	if (!root || root->val == val)
-		return root;
-
-	if (root->val > val)
-	{
-		if (!root->left)
-			return root;
-		if (root->left->val > val)
-		{
-			root->left->left = splay(root->left->left, val);
-			root = rightRotate(root);
-		}
-		else if (root->left->val < val)
-		{
-			root->left->right = splay(root->left->right, val);
-			if (!root->left->right)
-				root->left = leftRotate(root->left);
-		}
-		return root->left ? rightRotate(root) : root;
-	}
-	else
-	{		
-		if (!root->right)
-			return root;
-		if (root->right->val > val)
-		{
-			root->right->left = splay(root->right->left, val);
-			if (root->right->left)
-				root->right = rightRotate(root->right);
-		}
-		else if (root->right->val < val)
-		{
-			root->right->right = splay(root->right->right, val);
-			root = leftRotate(root);
-		}
-		return root->right ? leftRotate(root) : root;
-	}
+    // Base cases: root is NULL or
+    // key is present at root
+	// cout<<"hello"<<endl;
+    if (root == NULL || root->val == key)
+        return root;
+ 
+    // Key lies in left subtree
+    if (root->val > key)
+    {
+        // Key is not in tree, we are done
+        if (root->left == NULL) return root;
+ 
+        // Zig-Zig (Left Left)
+        if (root->left->val > key)
+        {
+            // First recursively bring the
+            // key as root of left-left
+            root->left->left = splay(root->left->left, key);
+ 
+            // Do first rotation for root,
+            // second rotation is done after else
+            root = rightRotate(root);
+        }
+        else if (root->left->val < key) // Zig-Zag (Left Right)
+        {
+            // First recursively bring
+            // the key as root of left-right
+            root->left->right = splay(root->left->right, key);
+ 
+            // Do first rotation for root->left
+            if (root->left->right != NULL)
+                root->left = leftRotate(root->left);
+        }
+ 
+        // Do second rotation for root
+        return (root->left == NULL)? root: rightRotate(root);
+    }
+    else // Key lies in right subtree
+    {
+        // Key is not in tree, we are done
+        if (root->right == NULL) return root;
+ 
+        // Zag-Zig (Right Left)
+        if (root->right->val > key)
+        {
+            // Bring the key as root of right-left
+            root->right->left = splay(root->right->left, key);
+ 
+            // Do first rotation for root->right
+            if (root->right->left != NULL)
+                root->right = rightRotate(root->right);
+        }
+        else if (root->right->val < key)// Zag-Zag (Right Right)
+        {
+            // Bring the key as root of
+            // right-right and do first rotation
+            root->right->right = splay(root->right->right, key);
+            root = leftRotate(root);
+        }
+ 
+        // Do second rotation for root
+        return (root->right == NULL)? root: leftRotate(root);
+    }
 }
 
-Node *insert(Node *root, int k)
+template <class T>
+Node<T> *insert(Node<T> *root, T k)
 {
 	if (!root)
-		return new Node(k);
+		return new Node<T>(k);
 
 	root = splay(root, k);
 	if (root->val == k)
 		return root;
 
-	Node *newNode = new Node(k);
+	Node<T> *newNode = new Node<T>(k);
 
 	if (root->val > k)
 	{
@@ -97,27 +128,31 @@ Node *insert(Node *root, int k)
 	return newNode;
 }
 
-void printInorder(Node *root)
+template <class T>
+void preOrder(Node<T> *root)
 {
 	if (!root)
 		return;
-	printInorder(root->left);
 	cout << root->val << " ";
-	printInorder(root->right);
+	preOrder(root->left);
+	preOrder(root->right);
 }
 
-void searchFor(Node *root, int key)
+template <class T>
+Node<T> *searchFor(Node<T> *root, T key)
 {
-	Node *n = splay(root, key);
-	if (n->val == key)
+	Node<T> *newRoot = splay(root, key);
+	if (newRoot && newRoot->val == key)
 		cout << "Found " << key << endl;
 	else
 		cout << "Could not find " << key << endl;
+	return newRoot;
 }
 
-Node *deleteNode(Node *root, int key)
+template <class T>
+Node<T> *deleteNode(Node<T> *root, T key)
 {
-	Node *temp;
+	Node<T> *temp;
 	if (!root)
 		return nullptr;
 
@@ -145,7 +180,7 @@ Node *deleteNode(Node *root, int key)
 int main()
 {
 	int choice;
-	Node *root = nullptr;
+	Node<int> *root = nullptr;
 	while (true)
 	{
 		printf("0 for help >>");
@@ -155,7 +190,7 @@ int main()
 			cout << "1 -> insert\n";
 			cout << "2 -> search\n";
 			cout << "3 -> delete\n";
-			cout << "4 -> print inorder\n";
+			cout << "4 -> print preorder\n";
 			cout << "-1 -> exit\n";
 		}
 		else if (choice == 1)
@@ -179,11 +214,11 @@ int main()
 			int val;
 			printf("Enter value to search for: ");
 			cin >> val;
-			searchFor(root, val);
+			root = searchFor(root, val);
 		}
 		else if (choice == 4)
 		{
-			printInorder(root);
+			preOrder(root);
 			cout << endl;
 		}
 		else
