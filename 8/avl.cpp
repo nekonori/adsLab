@@ -10,7 +10,7 @@ public:
         this->val = val;
         left = nullptr;
         right = nullptr;
-        height = 0;
+        height = 1;
     }
 };
 
@@ -63,8 +63,6 @@ Node* insert(Node* node, int val){
     int balance = getBalance(node);
     if(balance > 1 && val < node->left->val)
         return rightRotate(node);
-    if (balance > 1 && val < node->left->val)
-        return rightRotate(node);
     if (balance < -1 && val > node->right->val)
         return leftRotate(node);
     if (balance > 1 && val > node->left->val){
@@ -81,8 +79,6 @@ Node* insert(Node* node, int val){
 Node * minValueNode(Node* node)
 {
     Node* current = node;
-
-    /* loop down to find the leftmost leaf */
     while (current->left != NULL)
         current = current->left;
 
@@ -127,7 +123,6 @@ Node* deleteNode(Node* root, int key)
         return root;
     root->height = 1 + max(getHeight(root->left),
                            getHeight(root->right));
-
     int balance = getBalance(root);
     if (balance > 1 &&
         getBalance(root->left) >= 0)
@@ -150,13 +145,13 @@ Node* deleteNode(Node* root, int key)
     return root;
 }
 
-void printInorder(Node* node)
+void preOrder(Node* node)
 {
     if (node == NULL)
         return;
-    printInorder(node->left);
     cout << node->val << " ";
-    printInorder(node->right);
+    preOrder(node->left);
+    preOrder(node->right);
 }
 
 void searchFor(Node* node, int key){
@@ -168,7 +163,7 @@ void searchFor(Node* node, int key){
         cout<<"Found "<<key<<endl;
         return;
     }
-    if(node->val<key)
+    if(node->val>key)
         searchFor(node->left, key);
     else
         searchFor(node->right, key);
@@ -184,7 +179,7 @@ int main(){
             cout<<"1 -> insert\n";
             cout<<"2 -> search\n";
             cout<<"3 -> delete\n";
-            cout<<"4 -> print inorder\n";
+            cout<<"4 -> print preOrder\n";
             cout<<"-1 -> exit\n";
         } else if(choice == 1){
             int val;
@@ -204,7 +199,7 @@ int main(){
             cin>>val;
             searchFor(root, val);
         } else if(choice == 4){
-            printInorder(root);
+            preOrder(root);
             cout<<endl;
         }
         else break;
